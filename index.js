@@ -66,7 +66,7 @@ async function generateRepoCard(repoOwner, repoName, theme = {}) {
         .replaceAll("{{language}}", data.language || "Unknown")
         .replaceAll("{{languageColor}}", data.language ? (colors[data.language]?.color || "#ffffff") : "#ffffff")
         .replaceAll("{{stars}}", formatNumber(data.stargazers_count))
-        .replaceAll("{{forks}}", formatNumber(data.forks))
+        .replaceAll("{{forks}}", formatNumber(data.forks_count))
         .replaceAll("{{updatedAt}}", formatDate(data.updated_at));
 
     return svgTemplate;
