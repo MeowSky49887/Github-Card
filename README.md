@@ -24,7 +24,7 @@ const { generateRepoCard, generateGistCard } = require("github-card");
 
 (async () => {
     // Generate Repository Card
-    const repoCard = await generateRepoCard("VOICEVOX/voicevox");
+    const repoCard = await generateRepoCard("VOICEVOX, "voicevox");
     console.log(repoCard);
 
     // Generate Gist Card
