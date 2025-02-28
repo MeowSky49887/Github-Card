@@ -3,28 +3,27 @@ const fs = require("fs");
 const path = require("path");
 const escapeHtml = require('escape-html');
 
-const CACHE_TIMEOUT = 3600000; // 1 hour
-const CACHE_FILE = "./cache.json";
 const REPO_TEMPLATE_FILE = path.join(__dirname, "repo.svg");
 const GIST_TEMPLATE_FILE = path.join(__dirname, "gist.svg");
 
+const cache = {};
+const CACHE_TIMEOUT = 3600000; // 1 hour
+
 async function get(url) {
     const now = Date.now();
-
-    let cache = {};
-    if (fs.existsSync(CACHE_FILE)) {
-        cache = JSON.parse(fs.readFileSync(CACHE_FILE, "utf-8"));
-    }
 
     if (cache[url] && Math.abs(now - cache[url].time) < CACHE_TIMEOUT) {
         return cache[url].data;
     }
 
     const resp = await fetch(url);
+    if (!resp.ok) {
+        throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
+    }
+
     const json = await resp.json();
-    
+
     cache[url] = { time: now, data: json };
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
 
     return json;
 }
