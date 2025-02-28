@@ -1,0 +1,17 @@
+{
+    "name": "github-card",
+    "version": "2025.0.1",
+    "main": "index.js",
+    "keywords": [
+      "github",
+      "repo",
+      "gist",
+      "card"
+    ],
+    "author": "MeowSkyKung",
+    "license": "ISC",
+    "description": "Node module that allows you to generate SVG cards for GitHub Repositories and Gists.",
+    "dependencies": {
+      "node-fetch-commonjs": "^3.3.2"
+    }
+  }
