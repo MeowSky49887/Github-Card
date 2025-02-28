@@ -38,7 +38,7 @@ function formatDate(utcString) {
 }
 
 // Generate Repository Card
-async function generateRepoCard(repoName, theme = {}) {
+async function generateRepoCard(repoOwner, repoName, theme = {}) {
     const defaultTheme = {
         cardBackground: '#0d1117',
         cardBorder: '#3d444d',
@@ -51,7 +51,7 @@ async function generateRepoCard(repoName, theme = {}) {
     const finalTheme = { ...defaultTheme, ...theme };
 
     const colors = await get("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json");
-    const data = await get(`https://api.github.com/repos/${repoName}`);
+    const data = await get(`https://api.github.com/repos/${repoOwner}/${repoName}`);
 
     let svgTemplate = fs.readFileSync(REPO_TEMPLATE_FILE, "utf-8");
 
