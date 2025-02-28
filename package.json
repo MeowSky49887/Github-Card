@@ -12,6 +12,7 @@
     "license": "ISC",
     "description": "Node module that allows you to generate SVG cards for GitHub Repositories and Gists.",
     "dependencies": {
+      "escape-html": "^1.0.3",
       "node-fetch-commonjs": "^3.3.2"
     }
   }
