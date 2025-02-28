@@ -56,19 +56,19 @@ async function generateRepoCard(repoName, theme = {}) {
     let svgTemplate = fs.readFileSync(REPO_TEMPLATE_FILE, "utf-8");
 
     svgTemplate = svgTemplate
-        .replace("{{cardBackground}}", finalTheme.cardBackground)
-        .replace("{{cardBorder}}", finalTheme.cardBorder)
-        .replace("{{titleColor}}", finalTheme.titleColor)
-        .replace("{{textColor}}", finalTheme.textColor)
-        .replace("{{url}}", data.html_url)
-        .replace("{{owner}}", escapeHtml(data.owner.login))
-        .replace("{{name}}", escapeHtml(data.name))
-        .replace("{{description}}", escapeHtml(data.description))
-        .replace("{{language}}", data.language || "Unknown")
-        .replace("{{languageColor}}", data.language ? (colors[data.language]?.color || "#ffffff") : "#ffffff")
-        .replace("{{stars}}", formatNumber(data.stargazers_count))
-        .replace("{{forks}}", formatNumber(data.forks))
-        .replace("{{updatedAt}}", formatDate(data.updated_at));
+        .replaceAll("{{cardBackground}}", finalTheme.cardBackground)
+        .replaceAll("{{cardBorder}}", finalTheme.cardBorder)
+        .replaceAll("{{titleColor}}", finalTheme.titleColor)
+        .replaceAll("{{textColor}}", finalTheme.textColor)
+        .replaceAll("{{url}}", data.html_url)
+        .replaceAll("{{owner}}", escapeHtml(data.owner.login))
+        .replaceAll("{{name}}", escapeHtml(data.name))
+        .replaceAll("{{description}}", escapeHtml(data.description))
+        .replaceAll("{{language}}", data.language || "Unknown")
+        .replaceAll("{{languageColor}}", data.language ? (colors[data.language]?.color || "#ffffff") : "#ffffff")
+        .replaceAll("{{stars}}", formatNumber(data.stargazers_count))
+        .replaceAll("{{forks}}", formatNumber(data.forks))
+        .replaceAll("{{updatedAt}}", formatDate(data.updated_at));
 
     return svgTemplate;
 }
@@ -91,16 +91,16 @@ async function generateGistCard(gistId, theme = {}) {
     let svgTemplate = fs.readFileSync(GIST_TEMPLATE_FILE, "utf-8");
 
     svgTemplate = svgTemplate
-        .replace("{{cardBackground}}", finalTheme.cardBackground)
-        .replace("{{cardBorder}}", finalTheme.cardBorder)
-        .replace("{{titleColor}}", finalTheme.titleColor)
-        .replace("{{textColor}}", finalTheme.textColor)
-        .replace("{{codeBackground}}", finalTheme.codeBackground)
-        .replace("{{codeColor}}", finalTheme.codeColor)
-        .replace("{{url}}", data.html_url)
-        .replace("{{owner}}", escapeHtml(data.owner.login))
-        .replace("{{name}}", escapeHtml(data.description) || escapeHtml(data.files[Object.keys(data.files)[0]].filename))
-        .replace("{{content}}", escapeHtml(data.files[Object.keys(data.files)[0]].content))
+        .replaceAll("{{cardBackground}}", finalTheme.cardBackground)
+        .replaceAll("{{cardBorder}}", finalTheme.cardBorder)
+        .replaceAll("{{titleColor}}", finalTheme.titleColor)
+        .replaceAll("{{textColor}}", finalTheme.textColor)
+        .replaceAll("{{codeBackground}}", finalTheme.codeBackground)
+        .replaceAll("{{codeColor}}", finalTheme.codeColor)
+        .replaceAll("{{url}}", data.html_url)
+        .replaceAll("{{owner}}", escapeHtml(data.owner.login))
+        .replaceAll("{{name}}", escapeHtml(data.description) || escapeHtml(data.files[Object.keys(data.files)[0]].filename))
+        .replaceAll("{{content}}", escapeHtml(data.files[Object.keys(data.files)[0]].content))
 
     return svgTemplate;
 }
