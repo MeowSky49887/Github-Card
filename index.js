@@ -1,27 +1,30 @@
 const fetch = require("node-fetch-commonjs");
 const fs = require("fs");
 const path = require("path");
+const escapeHtml = require('escape-html');
 
 const CACHE_TIMEOUT = 3600000; // 1 hour
+const CACHE_FILE = "./cache.json";
 const REPO_TEMPLATE_FILE = path.join(__dirname, "repo.svg");
 const GIST_TEMPLATE_FILE = path.join(__dirname, "gist.svg");
 
-const cache = {}; // In-memory cache
-
 async function get(url) {
     const now = Date.now();
+
+    let cache = {};
+    if (fs.existsSync(CACHE_FILE)) {
+        cache = JSON.parse(fs.readFileSync(CACHE_FILE, "utf-8"));
+    }
 
     if (cache[url] && Math.abs(now - cache[url].time) < CACHE_TIMEOUT) {
         return cache[url].data;
     }
 
     const resp = await fetch(url);
-    if (!resp.ok) {
-        throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
-    }
-
     const json = await resp.json();
+    
     cache[url] = { time: now, data: json };
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
 
     return json;
 }
@@ -58,9 +61,9 @@ async function generateRepoCard(repoName, theme = {}) {
         .replace("{{titleColor}}", finalTheme.titleColor)
         .replace("{{textColor}}", finalTheme.textColor)
         .replace("{{url}}", data.html_url)
-        .replace("{{owner}}", data.owner.login)
-        .replace("{{name}}", data.name)
-        .replace("{{description}}", data.description || "No description")
+        .replace("{{owner}}", escapeHtml(data.owner.login))
+        .replace("{{name}}", escapeHtml(data.name))
+        .replace("{{description}}", escapeHtml(data.description))
         .replace("{{language}}", data.language || "Unknown")
         .replace("{{languageColor}}", data.language ? (colors[data.language]?.color || "#ffffff") : "#ffffff")
         .replace("{{stars}}", formatNumber(data.stargazers_count))
@@ -95,9 +98,9 @@ async function generateGistCard(gistId, theme = {}) {
         .replace("{{codeBackground}}", finalTheme.codeBackground)
         .replace("{{codeColor}}", finalTheme.codeColor)
         .replace("{{url}}", data.html_url)
-        .replace("{{owner}}", data.owner.login)
-        .replace("{{name}}", data.description || data.files[Object.keys(data.files)[0]].filename)
-        .replace("{{content}}", data.files[Object.keys(data.files)[0]].content || "No content available");
+        .replace("{{owner}}", escapeHtml(data.owner.login))
+        .replace("{{name}}", escapeHtml(data.description) || escapeHtml(data.files[Object.keys(data.files)[0]].filename))
+        .replace("{{content}}", escapeHtml(data.files[Object.keys(data.files)[0]].content))
 
     return svgTemplate;
 }
