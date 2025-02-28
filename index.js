@@ -20,6 +20,10 @@ async function get(url) {
     }
 
     const resp = await fetch(url);
+    if (!resp.ok) {
+        throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
+    }
+
     const json = await resp.json();
     
     cache[url] = { time: now, data: json };
@@ -62,7 +66,7 @@ async function generateRepoCard(repoName, theme = {}) {
         .replace("{{url}}", data.html_url)
         .replace("{{owner}}", data.owner.login)
         .replace("{{name}}", data.name)
-        .replace("{{description}}", data.description)
+        .replace("{{description}}", data.description || "No description")
         .replace("{{language}}", data.language || "Unknown")
         .replace("{{languageColor}}", data.language ? (colors[data.language]?.color || "#ffffff") : "#ffffff")
         .replace("{{stars}}", formatNumber(data.stargazers_count))
@@ -99,7 +103,7 @@ async function generateGistCard(gistId, theme = {}) {
         .replace("{{url}}", data.html_url)
         .replace("{{owner}}", data.owner.login)
         .replace("{{name}}", data.description || data.files[Object.keys(data.files)[0]].filename)
-        .replace("{{content}}", data.files[Object.keys(data.files)[0]].content)
+        .replace("{{content}}", data.files[Object.keys(data.files)[0]].content || "No content available");
 
     return svgTemplate;
 }
