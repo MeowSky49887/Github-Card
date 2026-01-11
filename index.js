@@ -5,6 +5,7 @@ const escapeHtml = require('escape-html');
 
 const REPO_TEMPLATE_FILE = path.join(__dirname, "repo.svg");
 const GIST_TEMPLATE_FILE = path.join(__dirname, "gist.svg");
+const SPACE_TEMPLATE_FILE = path.join(__dirname, "space.svg");
 
 const cache = {};
 const CACHE_TIMEOUT = 3600000; // 1 hour
@@ -104,4 +105,24 @@ async function generateGistCard(gistId, theme = {}) {
     return svgTemplate;
 }
 
-module.exports = { generateRepoCard, generateGistCard };
+// Generate Space Card
+async function generateSpaceCard(repoOwner, repoName) {
+    const data = await get(`https://huggingface.co/api/spaces/${spaceOwner}/${spaceName}`);
+
+    let svgTemplate = fs.readFileSync(SPACE_TEMPLATE_FILE, "utf-8");
+
+    svgTemplate = svgTemplate
+        .replaceAll("{{fromColor}}", escapeHtml(data.cardData.colorFrom))
+        .replaceAll("{{toColor}}", escapeHtml(data.cardData.colorTo))
+        .replaceAll("{{likes}}", String(data.likes))
+        .replaceAll("{{title}}", escapeHtml(data.cardData.title))
+        .replaceAll("{{emoji}}", escapeHtml(data.cardData.emoji))
+        .replaceAll("{{description}}", escapeHtml(data.cardData.short_description))
+        .replaceAll("{{owner}}", escapeHtml(data.author))
+        .replaceAll("{{updatedAt}}", formatDate(data.lastModified));
+
+    return svgTemplate;
+}
+
+module.exports = { generateRepoCard, generateGistCard, generateSpaceCard };
+
