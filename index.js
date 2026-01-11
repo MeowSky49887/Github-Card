@@ -106,7 +106,7 @@ async function generateGistCard(gistId, theme = {}) {
 }
 
 // Generate Space Card
-async function generateSpaceCard(repoOwner, repoName) {
+async function generateSpaceCard(spaceOwner, spaceName) {
     const data = await get(`https://huggingface.co/api/spaces/${spaceOwner}/${spaceName}`);
 
     let svgTemplate = fs.readFileSync(SPACE_TEMPLATE_FILE, "utf-8");
@@ -125,4 +125,5 @@ async function generateSpaceCard(repoOwner, repoName) {
 }
 
 module.exports = { generateRepoCard, generateGistCard, generateSpaceCard };
+
 
